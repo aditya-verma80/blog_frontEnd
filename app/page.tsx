@@ -1,9 +1,7 @@
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main>
-        <h1>Helloo</h1>
-      </main>
-    </div>
-  );
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export default async function page() {
+  const token = (await cookies()).get("authToken")?.value;
+  redirect(token ? "/dashboard" : "/login");
 }
