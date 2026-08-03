@@ -2,19 +2,20 @@
 import { loginUser } from "@/redux/slices/authSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../Input";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { isAuthenticated, user, loading, error } = useSelector(
+  const { loading } = useSelector(
     (state: RootState) => state.auth,
   );
-
-  console.log(isAuthenticated,user,error, "login form data --------------");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -51,14 +52,17 @@ const LoginForm = () => {
       return;
     }
     try {
-      dispatch(
+      await dispatch(
         loginUser({
           email: formData.email,
           password: formData.password,
         }),
-      );
+      ).unwrap();
+      toast.success("Signed in successfully");
+      router.replace("/dashboard");
+      router.refresh();
     } catch (error) {
-      console.error("Error during registration:", error);
+      toast.error(typeof error === "string" ? error : "Unable to sign in");
     }
   };
 
@@ -98,8 +102,8 @@ const LoginForm = () => {
             <div>
               <button
                 type="submit"
-                // disabled={isPending}
-                className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                disabled={loading}
+                className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
               >
                 {loading ? "loading..." : "Sign in"}
               </button>

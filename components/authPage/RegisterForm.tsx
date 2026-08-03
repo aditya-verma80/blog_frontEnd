@@ -3,7 +3,7 @@ import { registerUser } from "@/redux/slices/authSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Input from "../Input";
@@ -21,11 +21,9 @@ const RegisterFrom = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { isAuthenticated, loading, error } = useSelector(
+  const { loading } = useSelector(
     (state: RootState) => state.auth,
   );
-
-  console.log(error, "error --------------");
 
   const [formData, setFormData] = useState({
     username: "",
@@ -52,12 +50,6 @@ const RegisterFrom = () => {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,7 +93,7 @@ const RegisterFrom = () => {
     }
 
     try {
-      dispatch(
+      await dispatch(
         registerUser({
           user: formData.username.trim(),
           email: formData.email,
@@ -110,13 +102,14 @@ const RegisterFrom = () => {
           age: Number(formData.age),
           address: formData.address,
         }),
-      );
+      ).unwrap();
+      toast.success("Account created successfully");
+      router.replace("/dashboard");
+      router.refresh();
     } catch (error) {
-      console.error("Error during registration:", error);
+      toast.error(typeof error === "string" ? error : "Unable to create your account");
     }
   };
-
-  console.log(errors, "errors");
 
   return (
     <section className="max-w-full">

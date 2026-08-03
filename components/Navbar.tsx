@@ -1,13 +1,34 @@
-import { RootState } from "@/redux/store";
+"use client";
+
+import { currentUser, logoutUser } from "@/redux/slices/authSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { isAuthenticated, user, loading, error } = useSelector(
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { checkAuth, loading } = useSelector(
     (state: RootState) => state.auth,
   );
 
-  console.log(isAuthenticated, user, error, "navbar data --------------");
+  useEffect(() => {
+    if (!checkAuth) dispatch(currentUser());
+  }, [checkAuth, dispatch]);
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+      toast.success("Logged out successfully");
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      toast.error(typeof error === "string" ? error : "Unable to log out");
+    }
+  };
   return (
     <header className="text-gray-600 body-font">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
@@ -31,8 +52,13 @@ const Navbar = () => {
             Add Blog
           </Link>
         </nav>
-        <button className="text-white inline-flex items-center bg-red-800 border-0 py-1 px-3 focus:outline-none hover:bg-red-600 rounded text-base mt-4 md:mt-0 cursor-pointer">
-          Logout
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={loading}
+          className="text-white inline-flex items-center bg-red-800 border-0 py-1 px-3 focus:outline-none hover:bg-red-600 rounded text-base mt-4 md:mt-0 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-600"
+        >
+          {loading ? "Please wait..." : "Logout"}
         </button>
       </div>
     </header>

@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+
+const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
 
 // Handle POST requests for user sign-in
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
     const body = await request.json();
 
     const backendResponse = await fetch(
-      "http://localhost:5000/api/auth/login",
+      `${API_URL}/auth/login`,
       {
         method: "POST",
         headers: {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     );
 
     const contentType = backendResponse.headers.get("content-type") || "";
-    let data: any = {};
+    let data: { token?: string; user?: unknown; message?: string } = {};
 
     if (contentType.includes("application/json")) {
       data = await backendResponse.json().catch(() => ({}));
@@ -35,20 +35,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (data.token) {
-      cookieStore.set("auth", data.token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-      });
+    if (!data.token) {
+      return NextResponse.json({ error: "Login succeeded without a session token" }, { status: 502 });
     }
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       { success: true, user: data.user ?? null },
       { status: 200 },
     );
+    response.cookies.set("auth", data.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+    return response;
   } catch (error) {
     console.error(error);
     return NextResponse.json(
