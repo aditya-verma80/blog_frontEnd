@@ -95,7 +95,7 @@ const RegisterFrom = () => {
     try {
       await dispatch(
         registerUser({
-          user: formData.username.trim(),
+          username: formData.username.trim(),
           email: formData.email,
           password: formData.password,
           confirmPassword: formData.confirmPassword,

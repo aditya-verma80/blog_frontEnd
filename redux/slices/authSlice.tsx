@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface User {
   id: string;
-  user: string;
+  username: string;
   email: string;
   role: "user" | "admin";
   age: number;
@@ -35,7 +35,7 @@ async function readResponse(response: Response) {
 
 export const registerUser = createAsyncThunk<
   User,
-  { user: string; email: string; password: string; confirmPassword: string; age: number; address: string },
+  { username: string; email: string; password: string; confirmPassword: string; age: number; address: string },
   { rejectValue: string }
 >("auth/register", async (signupAccess, { rejectWithValue }) => {
   try {

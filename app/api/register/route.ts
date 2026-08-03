@@ -10,9 +10,13 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const data = await backendResponse.json().catch(() => ({}));
+    const data: { token?: string; user?: unknown; message?: string; error?: string } =
+      await backendResponse.json().catch(() => ({}));
     if (!backendResponse.ok) {
-      return NextResponse.json({ error: data.message || "Registration failed" }, { status: backendResponse.status });
+      return NextResponse.json(
+        { error: data.error || data.message || "Registration failed" },
+        { status: backendResponse.status },
+      );
     }
     if (!data.token) return NextResponse.json({ error: "Registration succeeded without a session token" }, { status: 502 });
 
@@ -25,7 +29,12 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
     return response;
-  } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    const invalidJson = error instanceof SyntaxError;
+    return NextResponse.json(
+      { error: invalidJson ? "Invalid request body" : `Authentication service is unavailable: ${message}` },
+      { status: invalidJson ? 400 : 503 },
+    );
   }
 }
