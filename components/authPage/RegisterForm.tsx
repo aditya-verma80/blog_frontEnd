@@ -1,58 +1,123 @@
 "use client";
+import { registerUser } from "@/redux/slices/authSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
-import { useActionState } from "react";
-import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Input from "../Input";
 
-type FormState = {
-  success: boolean;
-  message: string;
-  errors?: {
-    username?: string[];
-    email?: string[];
-  };
-  inputs?: {
-    username: string;
-    email: string;
-  };
-} | null;
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(3, "Username must be at least 3 characters.")
-    .max(20, "Username must be under 20 characters."),
-  email: z.string().email("Please enter a valid email address."),
-});
-
-async function submitForm(prevState, formData) {
-  const username = formData.get("username");
-  const email = formData.get("email");
-  const age = formData.get("age");
-  const role = formData.get("role");
-  const address = formData.get("address");
-  const password = formData.get("password");
-  const confirmPassword = formData.get("confirmPassword");
-
-  if (!username || !email || !age || role) {
-    return { success: false, message: "All fields are required." };
-  }
-
-  // Simulate API call
-  await new Promise((res) => setTimeout(res, 1000));
-
-  return { success: true, message: `Welcome, ${username}!` };
-}
+// type RegisterFormValues = {
+//   username: string;
+//   email: string;
+//   password: string;
+//   age: string | number;
+//   address: string;
+// };
 
 const RegisterFrom = () => {
-  const [state, formAction, isPending] = useActionState<FormState, FormData>(
-    submitForm,
-    {
-      success: false,
-      error: null,
-      message: "",
-    },
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { isAuthenticated, loading, error } = useSelector(
+    (state: RootState) => state.auth,
   );
-  console.log(state, "value of the data form");
+
+  console.log(error, "error --------------");
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    age: "",
+    address: "",
+  });
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     // router.push("/");
+  //   }
+  // }, [isAuthenticated, router]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((pre) => ({
+      ...pre,
+      [name]: value,
+    }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (formData.username.trim().length < 2) {
+      newErrors.username = "Username must be at least 2 characters long";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    }
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.trim().length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+
+    if (!formData.confirmPassword.trim()) {
+      newErrors.confirmPassword = "Confirm Password is required";
+    } else if (formData.confirmPassword.trim() !== formData.password.trim()) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    if (!formData.age.trim()) {
+      newErrors.age = "Age is required";
+    } else if (isNaN(Number(formData.age)) || Number(formData.age) <= 0) {
+      newErrors.age = "Age must be a positive number";
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      dispatch(
+        registerUser({
+          user: formData.username.trim(),
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          age: Number(formData.age),
+          address: formData.address,
+        }),
+      );
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
+
+  console.log(errors, "errors");
+
   return (
     <section className="max-w-full">
       <div className=" flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-10 bg-gray-900 ">
@@ -61,130 +126,89 @@ const RegisterFrom = () => {
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-white md:text-2xl dark:text-white">
               Create your account
             </h1>
-            <form className="space-y-4 md:space-y-6" action={formAction}>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-white"
-                >
-                  Your email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  placeholder="name@company.com"
-                />
-              </div>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <Input
+                label="username"
+                type="text"
+                value={formData.username}
+                onChange={handleChange}
+                name="username"
+                error={errors.username}
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                placeholder="Enter your name"
+              />
 
-              <div className="flex flex-wrap -m-2 mb-2 ">
-                <div className="p-2 w-1/2">
-                  <div className="relative">
-                    <label
-                      htmlFor="age"
-                      className="leading-7 text-sm text-white "
-                    >
-                      Age
-                    </label>
-                    <input
-                      type="text"
-                      id="age"
-                      name="age"
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                    />
-                  </div>
-                </div>
-                <div className="p-2 w-1/2">
-                  <div className="relative">
-                    <label
-                      htmlFor="role"
-                      className="leading-7 text-sm text-white"
-                    >
-                      Role
-                    </label>
-                    <select
-                      id="small"
-                      name="role"
-                      className="block w-full rounded-md bg-white/5 px-3 py-2.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6"
-                    >
-                      <option className="text-gray-800">
-                        Choose Your Role
-                      </option>
-                      <option className="text-gray-800" defaultValue="user">
-                        User
-                      </option>
-                      <option className="text-gray-800" defaultValue="admin">
-                        Admin
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+              <Input
+                label="email"
+                type="text"
+                value={formData.email}
+                onChange={handleChange}
+                name="email"
+                error={errors.email}
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                placeholder="Enter your email"
+              />
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-white"
-                >
-                  Address
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  id="address"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  placeholder="address"
-                />
-              </div>
+              <Input
+                label="age"
+                type="number"
+                value={formData.age}
+                onChange={handleChange}
+                name="age"
+                error={errors.age}
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                placeholder="Enter your age"
+              />
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="••••••••"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-white"
-                >
-                  Confirm Password
-                </label>
-                <input
-                  type="text"
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  placeholder="••••••••"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
+              <Input
+                label="address"
+                type="text"
+                value={formData.address}
+                onChange={handleChange}
+                name="address"
+                error={errors.address}
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                placeholder="Enter your address"
+              />
+
+              <Input
+                label="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                name="password"
+                error={errors.password}
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                placeholder="Enter your password"
+              />
+
+              <Input
+                label="Confirm Password"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                name="confirmPassword"
+                error={errors.confirmPassword}
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                placeholder="Confirm your password"
+              />
 
               <button
                 type="submit"
-                className="w-full text-white bg-gray-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 cursor-pointer"
+                disabled={loading === true}
+                className="w-full text-white bg-blue-800 hover:bg-primary-700 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 cursor-pointer disabled:bg-gray-600 disabled:text-gray-100 disabled:cursor-not-allowed"
               >
-                Sign up
+                {loading ? "Submitting..." : "Sign up"}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Don’t have an account yet?{" "}
+                Don`t have an account yet?
                 <Link
                   href="/login"
-                  className="font-medium text-blue-600 hover:underline dark:text-primary-500"
+                  className="font-bold text-blue-600 hover:underline dark:text-primary-500"
                 >
                   Signin
                 </Link>
               </p>
-              {state?.error && <p className="error-msg">{state.error}</p>}
             </form>
           </div>
         </div>

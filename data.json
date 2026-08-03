@@ -1,0 +1,22 @@
+{
+  "messages": [
+    {
+      "id": "1",
+      "username": "john_doe",
+      "email": "john@example.com",
+      "password": "Password123",
+      "role": "user",
+      "age": 25,
+      "address": "123 Main St"
+    },
+    {
+      "id": "1",
+      "username": "admin_jane",
+      "email": "admin@example.com",
+      "password": "AdminPassword",
+      "role": "admin",
+      "age": 30,
+      "address": "456 Market St"
+    }
+  ]
+}

@@ -5,14 +5,7 @@ interface blogType {
 }
 
 const BlogDetails = ({ blogId }: blogType) => {
-  return (
-    <>
-    
-     This is main blog page {blogId}
-    
-    
-    </>
-  );
+  return <>this the page view all detailes{blogId}</>;
 };
 
 export default BlogDetails;

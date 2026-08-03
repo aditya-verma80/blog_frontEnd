@@ -1,76 +1,66 @@
 "use client";
+import { loginUser } from "@/redux/slices/authSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
-import { useActionState, useState, useMemo } from "react";
-
-interface loginFormVal {
-  success: boolean;
-  message: string;
-  messageError: {
-    email?: string;
-    password?: string;
-  };
-}
-
-async function loginUser(
-  previousState: loginFormVal,
-  formData: FormData,
-): Promise<loginFormVal> {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  console.log(email, password, "======= enter value is getting =============");
-
-  if (!email || !email.includes("@")) {
-    return {
-      ...previousState,
-      success: false,
-      message: "Invalid email",
-      messageError: { email: "Please enter a valid email address with @" },
-    };
-  }
-
-  if (!password || password.length <= 8) {
-    return {
-      ...previousState,
-      success: false,
-      message: "Password requirement failed",
-      messageError: { password: "Password must be more than 8 characters." },
-    };
-  }
-
-  return {
-    ...previousState,
-    success: true,
-    message: `Logged in as ${email}`,
-    messageError: {},
-  };
-}
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Input from "../Input";
 
 const LoginForm = () => {
-  const [emailVal, setEmailVal] = useState("");
-  const [passwordVal, setPasswordVal] = useState("");
-  const [state, formAction, isPending] = useActionState<loginFormVal, FormData>(
-    loginUser,
-    {
-      success: false,
-      message: "",
-      messageError: {},
-    },
+  const dispatch = useDispatch<AppDispatch>();
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { isAuthenticated, user, loading, error } = useSelector(
+    (state: RootState) => state.auth,
   );
 
-  // Live validation on keystroke (derived, avoids setState in effect)
-  const liveErrors = useMemo(() => {
-    const errors: { email?: string; password?: string } = {};
-    if (emailVal.length > 0 && !emailVal.includes("@")) {
-      errors.email = "Missing '@' in your email address.";
-    }
-    return errors;
-  }, [emailVal]);
+  console.log(isAuthenticated,user,error, "login form data --------------");
 
-  // Combine live error feedback with server action feedback
-  const displayEmailError = liveErrors.email || state.messageError?.email;
-  const displayPasswordError =
-    liveErrors.password || state.messageError?.password;
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((pre) => ({
+      ...pre,
+      [name]: value,
+    }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    }
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.trim().length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    try {
+      dispatch(
+        loginUser({
+          email: formData.email,
+          password: formData.password,
+        }),
+      );
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
 
   return (
     <div>
@@ -82,77 +72,42 @@ const LoginForm = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action={formAction} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm/6 font-medium text-gray-100"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="text"
-                  value={emailVal}
-                  onChange={(e) => {
-                    setEmailVal(e.target.value);
-                  }}
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-              {displayEmailError && (
-                <p className="mt-2 text-sm text-red-400" id="email-error">
-                  {displayEmailError}
-                </p>
-              )}
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Input
+              label="email"
+              type="text"
+              value={formData.email}
+              onChange={handleChange}
+              name="email"
+              error={errors.email}
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              placeholder="Enter your email"
+            />
 
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-100"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={passwordVal}
-                  onChange={(e) => {
-                    setPasswordVal(e.target.value);
-                  }}
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-              {/* FIX 2: Now correctly displays when state.messageError.password is provided */}
-              {displayPasswordError && (
-                <p className="mt-2 text-sm text-red-400" id="password-error">
-                  {displayPasswordError}
-                </p>
-              )}
-            </div>
+            <Input
+              label="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              name="password"
+              error={errors.password}
+              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              placeholder="Enter your password"
+            />
 
             <div>
               <button
                 type="submit"
-                disabled={isPending}
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                // disabled={isPending}
+                className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
-                {isPending ? "loading..." : "Sign in"}
+                {loading ? "loading..." : "Sign in"}
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Not a member?{" "}
+            Not a member?
             <Link
               href="/signup"
               className="font-semibold text-indigo-400 hover:text-indigo-300"
@@ -160,8 +115,6 @@ const LoginForm = () => {
               signup
             </Link>
           </p>
-
-          
         </div>
       </div>
     </div>

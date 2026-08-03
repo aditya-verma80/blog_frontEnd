@@ -1,10 +1,11 @@
-// import BlogEditor from "@/components/Button";
+import BlogEditor from "@/components/blogs/BlogEditor";
 import React from "react";
 
 const CreateBlog = () => {
   return (
     <div>
-      {/* <BlogEditor /> */}
+      <h1>Add Blog</h1>
+      <BlogEditor />
     </div>
   );
 };

@@ -3,5 +3,5 @@ import { redirect } from "next/navigation";
 
 export default async function page() {
   const token = (await cookies()).get("authToken")?.value;
-  redirect(token ? "/dashboard" : "/login");
+  redirect(token ? "/dashboard" : "/share");
 }

@@ -1,4 +1,5 @@
 "use client";
+// import Button from "@/components/Button";
 import ConfirmationModal from "@/components/ConfirmationModal";
 // import LeftSidebar from "./LeftSidebar";
 // import RightSidebar from "./RightSidebar";
@@ -58,65 +59,69 @@ const Dashboard = () => {
         </div> */}
 
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3">
-        {dataList.map((blog) => (
-          <section
-            key={blog.id}
-            className="flex flex-col  antialiased  min-h-screen p-4"
-          >
-            <div className="flex flex-col bg-white shadow-lg rounded-lg overflow-hidden">
-              <div className="grow flex flex-col p-5">
-                <div className="grow">
-                  <header className="mb-3">
-                    <a
-                      className="block focus:outline-none focus-visible:ring-2"
-                      href="#0"
+        {dataList &&
+          dataList.map((blog) => (
+            <section
+              key={blog.id}
+              className="flex flex-col  antialiased  min-h-screen p-4"
+            >
+              <div className="flex flex-col bg-white shadow-lg rounded-lg overflow-hidden">
+                <div className="grow flex flex-col p-5">
+                  <div className="grow">
+                    <header className="mb-3">
+                      <a
+                        className="block focus:outline-none focus-visible:ring-2"
+                        href="#0"
+                      >
+                        <h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">
+                          The Ultimate JavaScript Course
+                        </h3>
+                      </a>
+                    </header>
+                    <div className="mb-8">
+                      <p>
+                        The JavaScript course for everyone! Master JavaScript
+                        with projects, challenges and theory.
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="text-gray-700">By {blog.authName}</p>
+                      <p className="text-sm text-gray-800">{blog.createAt}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    {/* <Button buttonName="click me" bgColor="bg-red-400" clickRouter={blog.id}/> */}
+
+                    <button
+                      onClick={() => router.push(`/blog/${blog.id}`)}
+                      className="font-medium text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                     >
-                      <h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">
-                        The Ultimate JavaScript Course
-                      </h3>
+                      Read More
+                    </button>
+
+                    <button
+                      onClick={() => router.push(`/blog/${blog.id}/edit`)}
+                      className=" font-semibold text-sm inline-flex items-center justify-center px-2 py-1 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-yellow-600 focus:outline-none focus-visible:ring-2 hover:bg-600-700 text-white cursor-pointer"
+                    >
+                      Edit
+                    </button>
+                    <a
+                      onClick={() => setIsOpen(true)}
+                      className="pointer-cursor font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-red-500 focus:outline-none focus-visible:ring-2 hover:red-indigo-600 text-white cursor-pointer"
+                    >
+                      Delete
                     </a>
-                  </header>
-                  <div className="mb-8">
-                    <p>
-                      The JavaScript course for everyone! Master JavaScript with
-                      projects, challenges and theory.
-                    </p>
+                    <ConfirmationModal
+                      isOpen={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      onConfirm={handleDelete}
+                      itemName={blog.id}
+                    />
                   </div>
-                  <div className="">
-                    <p className="text-gray-700">By {blog.authName}</p>
-                    <p className="text-sm text-gray-800">{blog.createAt}</p>
-                  </div>
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => router.push(`/blog/${blog.id}`)}
-                    className="font-medium text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    Read More
-                  </button>
-                  <button
-                    onClick={() => router.push(`/blog/${blog.id}/edit`)}
-                    className=" font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-yellow-600 focus:outline-none focus-visible:ring-2 hover:bg-600-700 text-white"
-                  >
-                    Edit
-                  </button>
-                  <a
-                    onClick={() => setIsOpen(true)}
-                    className="pointer-cursor font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-red-500 focus:outline-none focus-visible:ring-2 hover:red-indigo-600 text-white"
-                  >
-                    delete
-                  </a>
-                  <ConfirmationModal
-                    isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    onConfirm={handleDelete}
-                    itemName={blog.id}
-                  />
                 </div>
               </div>
-            </div>
-          </section>
-        ))}
+            </section>
+          ))}
       </div>
     </section>
   );
