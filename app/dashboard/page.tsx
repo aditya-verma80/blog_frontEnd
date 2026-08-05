@@ -5,45 +5,30 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 // import RightSidebar from "./RightSidebar";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-const dataList = [
-  {
-    id: 1,
-    title: "blog title first",
-    authName: "aditya",
-    content:
-      "The JavaScript course for everyone! Master JavaScript with projects, challenges and theory.",
-    createAt: "2026-07-12",
-    updateAt: "2026-07-29",
-  },
-  {
-    id: 2,
-    title: "blog title first",
-    authName: "vivek",
-    content:
-      "The JavaScript course for everyone! Master JavaScript with projects, challenges and theory.",
-    createAt: "2026-07-12",
-    updateAt: "2026-07-29",
-  },
-  {
-    id: 3,
-    title: "The Ultimate JavaScript Course",
-    authName: "tanuj",
-    content:
-      "The JavaScript course for everyone! Master JavaScript with projects, challenges and theory.",
-    createAt: "2026-07-12",
-    updateAt: "2026-07-29",
-  },
-];
+import { useEffect, useState } from "react";
+// import dataList from "@/db.json";
 
 const Dashboard = () => {
   const router = useRouter();
+  const [uesrData, setUserData] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleDelete = () => {
     console.log("Item deleted successfully!");
   };
+
+  useEffect(() => {
+    fetch(" http://localhost:4000/blogs")
+      .then((response) => response.json())
+      .then((data) => {
+        setUserData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  console.log("User data:", uesrData);
   return (
     <section>
       <Navbar />
@@ -59,8 +44,8 @@ const Dashboard = () => {
         </div> */}
 
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3">
-        {dataList &&
-          dataList.map((blog) => (
+        {uesrData &&
+          uesrData.map((blog) => (
             <section
               key={blog.id}
               className="flex flex-col  antialiased  min-h-screen p-4"

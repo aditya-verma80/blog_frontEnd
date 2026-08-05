@@ -35,7 +35,7 @@ async function readResponse(response: Response) {
 
 export const registerUser = createAsyncThunk<
   User,
-  { username: string; email: string; password: string; confirmPassword: string; age: number; address: string },
+  { user: Omit<User, "id" | "createdAt" | "updatedAt"> },
   { rejectValue: string }
 >("auth/register", async (signupAccess, { rejectWithValue }) => {
   try {
@@ -47,7 +47,9 @@ export const registerUser = createAsyncThunk<
     const data = await readResponse(response);
     return data.user as User;
   } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : "Registration failed");
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Registration failed",
+    );
   }
 });
 
@@ -65,22 +67,27 @@ export const loginUser = createAsyncThunk<
     const data = await readResponse(response);
     return data.user as User;
   } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : "Login failed");
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Login failed",
+    );
   }
 });
 
-export const currentUser = createAsyncThunk<User, void, { rejectValue: string }>(
-  "auth/currentUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await fetch("/api/me", { cache: "no-store" });
-      const data = await readResponse(response);
-      return data.user as User;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : "Unauthorized");
-    }
-  },
-);
+export const currentUser = createAsyncThunk<
+  User,
+  void,
+  { rejectValue: string }
+>("auth/currentUser", async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch("/api/me", { cache: "no-store" });
+    const data = await readResponse(response);
+    return data.user as User;
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Unauthorized user",
+    );
+  }
+});
 
 export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
   "auth/logout",
@@ -89,7 +96,9 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
       const response = await fetch("/api/logout", { method: "POST" });
       await readResponse(response);
     } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : "Logout failed");
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Logout failed",
+      );
     }
   },
 );
@@ -107,14 +116,25 @@ export const authSlicer = createSlice({
         state.checkAuth = true;
       })
       .addMatcher(
-        (action) => [registerUser.pending.type, loginUser.pending.type, currentUser.pending.type, logoutUser.pending.type].includes(action.type),
+        (action) =>
+          [
+            registerUser.pending.type,
+            loginUser.pending.type,
+            currentUser.pending.type,
+            logoutUser.pending.type,
+          ].includes(action.type),
         (state) => {
           state.loading = true;
           state.error = null;
         },
       )
       .addMatcher(
-        (action) => [registerUser.fulfilled.type, loginUser.fulfilled.type, currentUser.fulfilled.type].includes(action.type),
+        (action) =>
+          [
+            registerUser.fulfilled.type,
+            loginUser.fulfilled.type,
+            currentUser.fulfilled.type,
+          ].includes(action.type),
         (state, action: { payload: User }) => {
           state.loading = false;
           state.user = action.payload;
@@ -123,10 +143,17 @@ export const authSlicer = createSlice({
         },
       )
       .addMatcher(
-        (action) => [registerUser.rejected.type, loginUser.rejected.type, currentUser.rejected.type, logoutUser.rejected.type].includes(action.type),
+        (action) =>
+          [
+            registerUser.rejected.type,
+            loginUser.rejected.type,
+            currentUser.rejected.type,
+            logoutUser.rejected.type,
+          ].includes(action.type),
         (state, action: { payload?: string; error?: { message?: string } }) => {
           state.loading = false;
-          state.error = action.payload || action.error?.message || "Authentication failed";
+          state.error =
+            action.payload || action.error?.message || "Authentication failed";
           state.isAuthenticated = false;
           state.checkAuth = true;
         },

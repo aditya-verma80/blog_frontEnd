@@ -1,14 +1,66 @@
 {
-    "users": [
-        {
-            "id": "1",
-            "username": "john_doe",
-            "email": "john@example.com",
-            "password": "Password123",
-            "role": "user",
-            "age": 25,
-            "address": "123 Main St"
-        }
-    ],
-    "blogs": []
+  "users": [
+    {
+      "_id": {
+        "$oid": "6a70f64d2b8cd32d5687a2ae"
+      },
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "password": "$2b$12$DPf7COXeqkG3dq7MXE9ElOnv7u7Z6YOtdTZ76rv/t9ZRhKHu0HBfW",
+      "age": 22,
+      "address": "noida",
+      "role": "user",
+      "createdAt": {
+        "$date": "2026-08-03T20:13:01.211Z"
+      },
+      "updatedAt": {
+        "$date": "2026-08-03T20:13:01.211Z"
+      },
+      "__v": 0
+    },
+    {
+      "_id": {
+        "$oid": "6a685c338cef4e91d2b4fe4c"
+      },
+      "username": "alice",
+      "email": "alice@example.com",
+      "password": "$2b$12$zZhwRXZs4xd8A/F2DWhzx.hwl9ac3N3nhkE3sA6K0DdOuh2Vk6kMK",
+      "age": 25,
+      "address": "123 Main St",
+      "role": "user",
+      "createdAt": {
+        "$date": "2026-07-28T07:37:23.474Z"
+      },
+      "updatedAt": {
+        "$date": "2026-07-28T07:37:23.474Z"
+      },
+      "__v": 0
+    }
+  ],
+  "blogs": [
+    {
+      "id": 1,
+      "title": "blog title first",
+      "authName": "aditya",
+      "content": "The JavaScript course for everyone! Master JavaScript with projects, challenges and theory.",
+      "createAt": "2026-07-12",
+      "updateAt": "2026-07-29"
+    },
+    {
+      "id": 2,
+      "title": "blog title first",
+      "authName": "vivek",
+      "content": "The JavaScript course for everyone! Master JavaScript with projects, challenges and theory.",
+      "createAt": "2026-07-12",
+      "updateAt": "2026-07-29"
+    },
+    {
+      "id": 3,
+      "title": "The Ultimate JavaScript Course",
+      "authName": "tanuj",
+      "content": "The JavaScript course for everyone! Master JavaScript with projects, challenges and theory.",
+      "createAt": "2026-07-12",
+      "updateAt": "2026-07-29"
+    }
+  ]
 }

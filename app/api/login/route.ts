@@ -7,16 +7,13 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const backendResponse = await fetch(
-      `${API_URL}/auth/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+    const backendResponse = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(body),
+    });
 
     const contentType = backendResponse.headers.get("content-type") || "";
     let data: { token?: string; user?: unknown; message?: string } = {};
@@ -28,15 +25,11 @@ export async function POST(request: NextRequest) {
       data = { message: text || "Invalid credentials" };
     }
 
-    if (!backendResponse.ok) {
-      return NextResponse.json(
-        { error: data.message || "Invalid credentials" },
-        { status: backendResponse.status },
-      );
-    }
-
     if (!data.token) {
-      return NextResponse.json({ error: "Login succeeded without a session token" }, { status: 502 });
+      return NextResponse.json(
+        { error: "token is not getting" },
+        { status: 502 },
+      );
     }
 
     const response = NextResponse.json(
