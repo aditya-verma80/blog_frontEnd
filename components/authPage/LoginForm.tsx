@@ -14,8 +14,7 @@ const LoginForm = () => {
   const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { loading, error } = useSelector((state: RootState) => state.auth);
-  console.log(error, "=========");
+  const { loading } = useSelector((state: RootState) => state.auth);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -51,13 +50,13 @@ const LoginForm = () => {
       return;
     }
     try {
-      await dispatch(
+      const result = await dispatch(
         loginUser({
           email: formData.email,
           password: formData.password,
         }),
       ).unwrap();
-      toast.success("Signed in successfully");
+      toast.success(result.message);
       router.replace("/dashboard");
       router.refresh();
     } catch (error) {
@@ -101,7 +100,7 @@ const LoginForm = () => {
             <div>
               <button
                 type="submit"
-                // disabled={loading}
+                disabled={loading}
                 className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
               >
                 {loading ? "...loading" : "Signin"}

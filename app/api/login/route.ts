@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     });
 
     const contentType = backendResponse.headers.get("content-type") || "";
-    let data: { token?: string; user?: unknown; message?: string } = {};
+    let data: { token?: string; user?: unknown; message?: string; error?: string } = {};
 
     if (contentType.includes("application/json")) {
       data = await backendResponse.json().catch(() => ({}));
@@ -38,7 +38,11 @@ export async function POST(request: NextRequest) {
     }
 
     const response = NextResponse.json(
-      { success: true, user: data.user ?? null },
+      {
+        success: true,
+        message: data.message || "Login successful",
+        user: data.user ?? null,
+      },
       { status: 200 },
     );
     response.cookies.set("authToken", data.token, {

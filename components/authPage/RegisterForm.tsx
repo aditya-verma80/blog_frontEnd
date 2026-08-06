@@ -91,19 +91,17 @@ const RegisterForm = () => {
     }
 
     try {
-      await dispatch(
+      const result = await dispatch(
         registerUser({
-          user: {
-            username: formData.username,
-            email: formData.email,
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-            age: Number(formData.age),
-            address: formData.address,
-          },
+          username: formData.username.trim(),
+          email: formData.email.trim(),
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          age: Number(formData.age),
+          address: formData.address.trim(),
         }),
       ).unwrap();
-      toast.success("Account created successfully");
+      toast.success(result.message);
       router.replace("/dashboard");
       router.refresh();
     } catch (error) {

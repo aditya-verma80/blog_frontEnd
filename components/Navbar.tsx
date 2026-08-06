@@ -2,7 +2,6 @@
 
 import { currentUser, logoutUser } from "@/redux/slices/authSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,8 +18,8 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutUser()).unwrap();
-      toast.success("Logged out successfully");
+      const message = await dispatch(logoutUser()).unwrap();
+      toast.success(message);
       router.replace("/login");
       router.refresh();
     } catch (error) {

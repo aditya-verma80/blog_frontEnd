@@ -14,7 +14,7 @@ export async function GET() {
     });
     const data = await backendResponse.json().catch(() => ({}));
     if (!backendResponse.ok) {
-      return NextResponse.json({ error: data.message || "Unable to load the user" }, { status: backendResponse.status });
+      return NextResponse.json({ error: data.error || data.message || "Unable to load the user" }, { status: backendResponse.status });
     }
     return NextResponse.json({ success: true, user: data.user ?? data });
   } catch {
