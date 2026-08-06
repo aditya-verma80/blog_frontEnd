@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
+const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString(),
     };
 
-    const backendResponse = await fetch("http://localhost:4000/users", {
+    const backendResponse = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,18 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(user),
     });
 
-    const data = await backendResponse.json();
+    const data = await backendResponse.json().catch(() => ({}));
+
+    if (!backendResponse.ok) {
+      return NextResponse.json(
+        {
+          error: data.error || data.message || "Registration failed",
+        },
+        {
+          status: backendResponse.status,
+        },
+      );
+    }
 
     return NextResponse.json(
       {

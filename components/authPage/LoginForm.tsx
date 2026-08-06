@@ -7,16 +7,15 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../Input";
 import { toast } from "react-toastify";
+// import LoaderButton from "../LoaderButton";
 
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { loading } = useSelector(
-    (state: RootState) => state.auth,
-  );
-
+  const { loading, error } = useSelector((state: RootState) => state.auth);
+  console.log(error, "=========");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -78,7 +77,7 @@ const LoginForm = () => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
-              label="email"
+              label="Email"
               type="text"
               value={formData.email}
               onChange={handleChange}
@@ -89,7 +88,7 @@ const LoginForm = () => {
             />
 
             <Input
-              label="password"
+              label="Password"
               type="password"
               value={formData.password}
               onChange={handleChange}
@@ -102,10 +101,10 @@ const LoginForm = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                // disabled={loading}
                 className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
               >
-                {loading ? "loading..." : "Sign in"}
+                {loading ? "...loading" : "Signin"}
               </button>
             </div>
           </form>

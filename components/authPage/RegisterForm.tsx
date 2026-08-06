@@ -16,14 +16,12 @@ import Input from "../Input";
 //   address: string;
 // };
 
-const RegisterFrom = () => {
+const RegisterForm = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { loading } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { loading } = useSelector((state: RootState) => state.auth);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -95,19 +93,23 @@ const RegisterFrom = () => {
     try {
       await dispatch(
         registerUser({
-          username: formData.username.trim(),
-          email: formData.email,
-          password: formData.password,
-          confirmPassword: formData.confirmPassword,
-          age: Number(formData.age),
-          address: formData.address,
+          user: {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            confirmPassword: formData.confirmPassword,
+            age: Number(formData.age),
+            address: formData.address,
+          },
         }),
       ).unwrap();
       toast.success("Account created successfully");
       router.replace("/dashboard");
       router.refresh();
     } catch (error) {
-      toast.error(typeof error === "string" ? error : "Unable to create your account");
+      toast.error(
+        typeof error === "string" ? error : "Unable to create your account",
+      );
     }
   };
 
@@ -210,4 +212,4 @@ const RegisterFrom = () => {
   );
 };
 
-export default RegisterFrom;
+export default RegisterForm;

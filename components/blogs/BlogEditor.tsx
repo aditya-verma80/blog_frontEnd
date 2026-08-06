@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import BlogForm from "./BlogForm";
-
 export default function BlogEditor() {
   const router = useRouter();
 
@@ -13,7 +12,7 @@ export default function BlogEditor() {
           <h1 className="text-2xl font-bold text-gray-800">BlogHub</h1>
           <button
             onClick={() => router.push("/dashboard")}
-            className="bg-gray-600 hover:bg-gray-700 text-white"
+            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl"
           >
             Back to Dashboard
           </button>

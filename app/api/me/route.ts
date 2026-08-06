@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
 
 export async function GET() {
-  const authToken = (await cookies()).get("auth")?.value;
+  const authToken = (await cookies()).get("authToken")?.value;
   if (!authToken) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {

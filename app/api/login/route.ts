@@ -25,9 +25,14 @@ export async function POST(request: NextRequest) {
       data = { message: text || "Invalid credentials" };
     }
 
+    if (!backendResponse.ok) {
+      const errorMessage = data.error || data.message || "Enter the correct email & password";
+      return NextResponse.json({ error: errorMessage }, { status: backendResponse.status });
+    }
+
     if (!data.token) {
       return NextResponse.json(
-        { error: "token is not getting" },
+        { error: "Invalid login response from auth server" },
         { status: 502 },
       );
     }
@@ -36,7 +41,7 @@ export async function POST(request: NextRequest) {
       { success: true, user: data.user ?? null },
       { status: 200 },
     );
-    response.cookies.set("auth", data.token, {
+    response.cookies.set("authToken", data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

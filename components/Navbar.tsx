@@ -11,9 +11,7 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { checkAuth, loading } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { checkAuth, loading } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (!checkAuth) dispatch(currentUser());
@@ -48,9 +46,15 @@ const Navbar = () => {
           <span className="ml-3 text-xl">Blog Application</span>
         </a>
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-          <Link href="/blog/create" className="mr-5 hover:text-gray-900">
+          {/* <Link href="/blog/create" className="mr-5 hover:text-gray-900">
             Add Blog
-          </Link>
+          </Link> */}
+          <div className="mr-5 mb-0 pb-0 text-end">
+            <div className="text-sm text-gray-800">Walcome! Jese Leos</div>
+            <div className="text-xs font-normal">
+              Joined in 2026/08
+            </div>
+          </div>
         </nav>
         <button
           type="button"
