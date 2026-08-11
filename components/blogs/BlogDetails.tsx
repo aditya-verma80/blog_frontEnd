@@ -1,37 +1,46 @@
-import React from "react";
+"use client";
 
-interface blogType {
-  blogId: string;
-}
+import { fetchBlogById } from "@/redux/slices/blogSlice";
+import { currentUser } from "@/redux/slices/authSlice";
+import type { AppDispatch, RootState } from "@/redux/store";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const BlogDetails = ({ blogId }: blogType) => {
+export default function BlogDetails({ blogId }: { blogId: string }) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { selectedBlog: blog, loading, error } = useSelector((state: RootState) => state.blog);
+  const { user, checkAuth } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    dispatch(fetchBlogById(blogId));
+  }, [blogId, dispatch]);
+
+  useEffect(() => {
+    if (!checkAuth) dispatch(currentUser());
+  }, [checkAuth, dispatch]);
+
+  if (loading) return <main id="main-content" role="status" className="mx-auto max-w-4xl p-4 sm:p-8">Loading blog...</main>;
+  if (error) return <main id="main-content" role="alert" className="mx-auto max-w-4xl p-4 text-red-800 sm:p-8">{error}</main>;
+  if (!blog) return <main id="main-content" className="mx-auto max-w-4xl p-4 sm:p-8">Blog not found.</main>;
+
   return (
-    <>
-      this the page view all detailes{blogId}
-      <main className="w-4xl mx-auto px-4 sm-px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-4xl font-bold text-blue-800 mb-4">Blog Title</h1>
-
-          <div className="prose prose-lg max-w-none text-gray-600 leading-relaxed border-b border-gray-200 pb-4">
-            Tailwind doesn`t include pre-designed button styles out of the box,
-            but they`re easy to build using existing utilities. Here are a few
-            examples
-          </div>
-
-          <span className="border-b border-gray-200 h-1"></span>
-
-          <div className="flex justify-between items-center mb-6  py-4 ">
-            <div className="">
-              <p className="text-sm text-gray-800"> By author name</p>
-              <p className="text-xs text-gray-500">create At: 24-08-2026</p>
-
-              <p className="text-xs text-gray-500">Update At: 24-08-2026</p>
-            </div>
-          </div>
+    <main id="main-content" className="mx-auto max-w-4xl px-4 py-8 text-gray-900">
+      <article className="min-w-0 rounded-lg bg-white p-4 shadow-md sm:p-8">
+        <h1 className="mb-4 break-words text-3xl font-bold text-blue-800 sm:text-4xl">{blog.title}</h1>
+        <div className="mb-6 whitespace-pre-wrap border-b border-gray-200 pb-6 text-gray-700">
+          {blog.content.replace(/<[^>]*>/g, " ")}
         </div>
-      </main>
-    </>
+        <p className="text-sm">By {blog.author?.username || blog.authorName || "Unknown"}</p>
+        <p className="text-xs text-gray-500">Created: {new Date(blog.createdAt).toLocaleString()}</p>
+        <p className="text-xs text-gray-500">Updated: {new Date(blog.updatedAt).toLocaleString()}</p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/dashboard" className="inline-flex min-h-11 items-center rounded bg-gray-700 px-4 py-2 text-white">Back</Link>
+          {(user?.id === blog.author?._id || user?.role === "admin") && (
+            <Link href={`/blog/${blog._id}/edit`} className="inline-flex min-h-11 items-center rounded bg-amber-700 px-4 py-2 text-white">Edit</Link>
+          )}
+        </div>
+      </article>
+    </main>
   );
-};
-
-export default BlogDetails;
+}

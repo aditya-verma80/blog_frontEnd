@@ -2,7 +2,9 @@ import React from 'react'
 
 const ShareCom = () => {
   return (
-    <div>
+    <main id="main-content" className="w-full overflow-x-auto p-4">
+      <h1 className="sr-only">Shared code example</h1>
+      <pre className="whitespace-pre-wrap break-words">
       {`
       
       
@@ -50,8 +52,9 @@ const ShareCom = () => {
       
       
       `}
+      </pre>
       
-    </div>
+    </main>
   )
 }
 

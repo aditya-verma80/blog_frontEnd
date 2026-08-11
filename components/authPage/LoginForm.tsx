@@ -65,8 +65,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900">
+    <main id="main-content" className="flex min-h-screen flex-col justify-center bg-gray-900 px-4 py-10 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
             Sign in to your account
@@ -77,7 +76,7 @@ const LoginForm = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               label="Email"
-              type="text"
+              type="email"
               value={formData.email}
               onChange={handleChange}
               name="email"
@@ -101,7 +100,7 @@ const LoginForm = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
+              className="flex min-h-11 w-full cursor-pointer justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-600"
               >
                 {loading ? "...loading" : "Signin"}
               </button>
@@ -109,17 +108,16 @@ const LoginForm = () => {
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Not a member?
+            Not a member?{" "}
             <Link
               href="/signup"
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
+              className="font-semibold text-indigo-300 underline hover:text-indigo-200"
             >
-              signup
+              Sign up
             </Link>
           </p>
         </div>
-      </div>
-    </div>
+    </main>
   );
 };
 

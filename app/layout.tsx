@@ -23,8 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <StoreProvider>{children}</StoreProvider>
-        <ToastContainer />
+        <ToastContainer role="status" aria-label="Notifications" />
       </body>
     </html>
   );
