@@ -1,70 +1,70 @@
-If you need a GitHub README.md for your Blogging Application project, you can use the following professional version:
+If you need a GitHub **README**.md for your Blogging Application project, you can use the following professional version:
 
-Blogging Application (MERN + Next.js)
+Blogging Application (**MERN** + Next.js)
 
-A full-stack Blogging Application built with Next.js, React, Node.js, Express.js, MongoDB, and TypeScript. The application provides secure authentication, blog management, rich text editing, PDF/DOCX export functionality, role-based access control, responsive design, accessibility compliance, and comprehensive unit testing.
+A full-stack Blogging Application built with Next.js, React, Node.js, Express.js, MongoDB, and TypeScript. The application provides secure authentication, blog management, rich text editing, **PDF**/**DOCX** export functionality, role-based access control, responsive design, accessibility compliance, and comprehensive unit testing.
 
 Features
 Authentication
-User Registration
-User Login
-JWT-Based Authentication
-Protected Routes
+### User Registration
+### User Login
+**JWT**-Based Authentication
+### Protected Routes
 Role-Based Authorization
 Password Encryption using Bcrypt
-Blog Management
-Create Blog Posts
-Edit Blog Posts
-Delete Blog Posts
-View All Blogs
-View Individual Blog Details
-Rich Text Editor Support
-Blog Metadata Tracking
-Author Name
-Creation Date
-Last Updated Date
+### Blog Management
+### Create Blog Posts
+### Edit Blog Posts
+### Delete Blog Posts
+### View All Blogs
+### View Individual Blog Details
+### Rich Text Editor Support
+### Blog Metadata Tracking
+### Author Name
+### Creation Date
+### Last Updated Date
 Dashboard
-Display All Blogs
-Display User Blogs
-Search Blogs
-Filter Blogs
-Pagination Support
-Export Functionality
-Export Blog as PDF
-Export Blog as DOCX
-Quality Standards
-WCAG AA Accessibility Compliance
+### Display All Blogs
+### Display User Blogs
+### Search Blogs
+### Filter Blogs
+### Pagination Support
+### Export Functionality
+Export Blog as **PDF**
+Export Blog as **DOCX**
+### Quality Standards
+**WCAG** AA Accessibility Compliance
 Mobile Responsive Design (320px and above)
 Unit Testing with 90%+ Coverage
 TypeScript Support
-Clean Code Architecture
-Technology Stack
+### Clean Code Architecture
+### Technology Stack
 Frontend
 Next.js
 React
 TypeScript
-Redux Toolkit
-RTK Query
-Tailwind CSS
-React Hook Form
+### Redux Toolkit
+**RTK** Query
+Tailwind **CSS**
+### React Hook Form
 Zod
 Axios
 TipTap / React Quill
 Jest
-React Testing Library
+### React Testing Library
 Backend
 Node.js
 Express.js
 MongoDB
 Mongoose
-JWT Authentication
+**JWT** Authentication
 Bcrypt
 Multer
 PDFKit
 Docx
 Jest
-Project Architecture
-Frontend Structure
+### Project Architecture
+### Frontend Structure
 src/
 ├── app/
 │   ├── login/
@@ -94,7 +94,7 @@ src/
 ├── types/
 └── middleware.ts
 
-Backend Structure
+### Backend Structure
 src/
 ├── controllers/
 │   ├── authController.js
@@ -117,7 +117,7 @@ src/
 ├── config/
 └── server.js
 
-Database Schema
+### Database Schema
 User
 {
   username: String,
@@ -139,62 +139,62 @@ Blog
   updatedAt: Date
 }
 
-API Endpoints
+**API** Endpoints
 Authentication APIs
-POST /api/auth/register
-POST /api/auth/login
-GET /api/auth/profile
+**POST** /api/auth/register
+**POST** /api/auth/login
+**GET** /api/auth/profile
 
 Blog APIs
-POST   /api/blogs
-GET    /api/blogs
-GET    /api/blogs/:id
-PUT    /api/blogs/:id
-DELETE /api/blogs/:id
+**POST**   /api/blogs
+**GET**    /api/blogs
+**GET**    /api/blogs/:id
+**PUT**    /api/blogs/:id
+**DELETE** /api/blogs/:id
 
 Export APIs
-GET /api/export/pdf/:id
-GET /api/export/docx/:id
+**GET** /api/export/pdf/:id
+**GET** /api/export/docx/:id
 
-Authentication Flow
-User Registration
+### Authentication Flow
+### User Registration
         ↓
 Save User in MongoDB
         ↓
-User Login
+### User Login
         ↓
-Credential Validation
+### Credential Validation
         ↓
-JWT Token Generation
+**JWT** Token Generation
         ↓
-Store Token Securely
+### Store Token Securely
         ↓
-Access Protected Routes
+### Access Protected Routes
 
-Authorization Roles
+### Authorization Roles
 Admin
-View All Blogs
-Create Blogs
-Edit Any Blog
-Delete Any Blog
+### View All Blogs
+### Create Blogs
+### Edit Any Blog
+### Delete Any Blog
 User
-View All Blogs
-Create Blogs
-Edit Own Blogs
-Delete Own Blogs
-Accessibility Requirements
+### View All Blogs
+### Create Blogs
+### Edit Own Blogs
+### Delete Own Blogs
+### Accessibility Requirements
 
-The application follows WCAG AA accessibility standards and includes:
+The application follows **WCAG** AA accessibility standards and includes:
 
-Semantic HTML
-ARIA Labels
-Keyboard Navigation
-Screen Reader Compatibility
-Focus Indicators
-Accessible Forms
-Proper Color Contrast
+Semantic **HTML**
+**ARIA** Labels
+### Keyboard Navigation
+### Screen Reader Compatibility
+### Focus Indicators
+### Accessible Forms
+### Proper Color Contrast
 Alternative Text for Images
-Responsive Design
+### Responsive Design
 
 Supported Screen Sizes:
 
@@ -206,28 +206,28 @@ Supported Screen Sizes:
 
 The application is fully responsive across mobile, tablet, and desktop devices.
 
-Security Features
-Password Security
+### Security Features
+### Password Security
 bcrypt.hash(password, 10);
 
-Authentication Security
-JWT Authentication
-Protected Routes
+### Authentication Security
+**JWT** Authentication
+### Protected Routes
 Role-Based Access Control
-Secure Token Handling
-Input Validation
-Zod Validation
-Express Validation
-XSS Protection
-Data Sanitization
+### Secure Token Handling
+### Input Validation
+### Zod Validation
+### Express Validation
+**XSS** Protection
+### Data Sanitization
 Testing
-Frontend Testing
-React Testing Library
+### Frontend Testing
+### React Testing Library
 Jest
-Backend Testing
+### Backend Testing
 Jest
-API Testing
-Coverage Goal
+**API** Testing
+### Coverage Goal
 Minimum 90% Test Coverage
 
 
@@ -236,56 +236,56 @@ Test Scenarios:
 Registration
 Login
 Authentication
-Blog CRUD Operations
-Dashboard Components
-Export Features
-Form Validation
-Protected Routes
+Blog **CRUD** Operations
+### Dashboard Components
+### Export Features
+### Form Validation
+### Protected Routes
 Installation
-Clone Repository
-git clone https://github.com/your-username/blogging-application.git
+### Clone Repository
+git clone [https://github.com/your-username/blogging-application.git](https://github.com/your-username/blogging-application.git)
 
-Frontend Setup
+### Frontend Setup
 cd client
 npm install
 npm run dev
 
-Backend Setup
+### Backend Setup
 cd server
 npm install
 npm run dev
 
-Environment Variables
+### Environment Variables
 MONGO_URI=
 JWT_SECRET=
-PORT=
+**PORT**=
 NEXT_PUBLIC_API_URL=
 
-Future Enhancements
-Dark Mode
-Blog Categories
-Blog Tags
-Comment System
-Bookmark Feature
-User Profile Management
+### Future Enhancements
+### Dark Mode
+### Blog Categories
+### Blog Tags
+### Comment System
+### Bookmark Feature
+### User Profile Management
 Image Upload with Cloudinary
-SEO Optimization
-Server-Side Rendering (SSR)
-Analytics Dashboard
-Project Objectives
+**SEO** Optimization
+Server-Side Rendering (**SSR**)
+### Analytics Dashboard
+### Project Objectives
 
 This project demonstrates:
 
 Full-Stack Development
 Next.js Application Development
-React Component Architecture
-Node.js API Development
+### React Component Architecture
+Node.js **API** Development
 MongoDB Database Design
-JWT Authentication
-Accessibility Best Practices
+**JWT** Authentication
+### Accessibility Best Practices
 Unit Testing and Test Coverage
 Production-Ready Code Structure
 Author
 
-Aditya Verma
+### Aditya Verma
  Frontend Developer | React.js | Next.js | Node.js | MongoDB | TypeScript
