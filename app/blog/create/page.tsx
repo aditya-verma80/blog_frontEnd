@@ -5,7 +5,7 @@ const CreateBlog = () => {
   return (
     <div>
       <h1>Add Blog</h1>
-      <BlogEditor />
+      <BlogEditor blogId={undefined} />
     </div>
   );
 };

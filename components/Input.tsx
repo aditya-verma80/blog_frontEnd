@@ -17,8 +17,16 @@ export default function Input({
   value,
   onChange,
   type = "text",
+  className = "",
+  ...rest
 }: InputProps) {
   const errorId = `${name}-error`;
+  const inputClassName = `block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 ${
+    error
+      ? "outline-red-500 focus:outline-red-500"
+      : "outline-white/10 focus:outline-indigo-500"
+  } ${className}`.trim();
+
   return (
     <div className="w-full mb-4">
       <label
@@ -33,15 +41,11 @@ export default function Input({
         type={type}
         value={value}
         onChange={onChange}
-        className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6 
-          ${
-            error
-              ? "outline-red-500 focus:outline-red-500"
-              : "outline-white/10 focus:outline-indigo-500"
-          }`}
+        className={inputClassName}
         placeholder={placeholder}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? errorId : undefined}
+        {...rest}
       />
       {error && (
         <p id={errorId} className="mt-1 text-sm font-medium text-red-300" role="alert">

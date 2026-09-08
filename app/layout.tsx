@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Raleway,Poppins  } from "next/font/google";
+import { Poppins  } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/redux/StoreProvider";
 import { ToastContainer } from "react-toastify";

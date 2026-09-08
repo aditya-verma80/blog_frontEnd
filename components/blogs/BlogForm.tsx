@@ -85,7 +85,7 @@ function QuillEditor({
   );
 }
 
-const BlogForm = ({ blogId }: { blogId: string }) => {
+const BlogForm = ({ blogId }: { blogId?: string }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { loading } = useSelector((state: RootState) => state.blog);
