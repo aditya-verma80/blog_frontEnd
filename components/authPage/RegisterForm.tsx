@@ -149,7 +149,6 @@ const RegisterForm = () => {
 
               <Input
                 label="Age"
-                label="Age"
                 type="number"
                 value={formData.age}
                 onChange={handleChange}
@@ -161,7 +160,6 @@ const RegisterForm = () => {
 
               <Input
                 label="Address"
-                label="Address"
                 type="text"
                 value={formData.address}
                 onChange={handleChange}
@@ -172,7 +170,6 @@ const RegisterForm = () => {
               />
 
               <Input
-                label="Password"
                 label="Password"
                 type="password"
                 value={formData.password}

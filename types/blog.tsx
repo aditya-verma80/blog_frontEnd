@@ -12,9 +12,4 @@ export interface Blog {
   createdAt: string;
   updatedAt: string;
   lastEditAt?: string;
-  authorName: string;
-  lastModified: string;
-  createdAt: string;
-  updatedAt: string;
-  lastEditAt?: string;
 }
