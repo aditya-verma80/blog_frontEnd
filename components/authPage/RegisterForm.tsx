@@ -16,6 +16,8 @@ import Input from "../Input";
 //   address: string;
 // };
 
+const emailRejex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 const RegisterForm = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -49,7 +51,7 @@ const RegisterForm = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors: Record<string, string> = {};
@@ -62,7 +64,10 @@ const RegisterForm = () => {
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
+    } else if (!emailRejex.test(formData.email)) {
+      newErrors.email = "Email is not valid";
     }
+
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     } else if (formData.password.trim().length < 6) {
@@ -121,7 +126,7 @@ const RegisterForm = () => {
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <Input
-                label="username"
+                label="User Name"
                 type="text"
                 value={formData.username}
                 onChange={handleChange}
@@ -132,7 +137,7 @@ const RegisterForm = () => {
               />
 
               <Input
-                label="email"
+                label="Email"
                 type="text"
                 value={formData.email}
                 onChange={handleChange}
@@ -143,7 +148,7 @@ const RegisterForm = () => {
               />
 
               <Input
-                label="age"
+                label="Age"
                 type="number"
                 value={formData.age}
                 onChange={handleChange}
@@ -154,7 +159,7 @@ const RegisterForm = () => {
               />
 
               <Input
-                label="address"
+                label="Address"
                 type="text"
                 value={formData.address}
                 onChange={handleChange}
@@ -165,7 +170,7 @@ const RegisterForm = () => {
               />
 
               <Input
-                label="password"
+                label="Password"
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -193,11 +198,11 @@ const RegisterForm = () => {
               >
                 {loading ? "Submitting..." : "Sign up"}
               </button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400 ">
                 Don`t have an account yet?
                 <Link
                   href="/login"
-                  className="font-bold text-blue-600 hover:underline dark:text-primary-500"
+                  className="font-bold ms-2 text-blue-600 hover:underline dark:text-primary-500"
                 >
                   Signin
                 </Link>

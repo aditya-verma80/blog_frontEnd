@@ -7,7 +7,9 @@ export interface Blog {
     username: string;
     email: string;
   };
-  createAt: string;
-  updateAt: string;
-  lastEditAt: string;
+  authorName: string;
+  lastModified: string;
+  createdAt: string;
+  updatedAt: string;
+  lastEditAt?: string;
 }

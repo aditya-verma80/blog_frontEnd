@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import BlogForm from "./BlogForm";
-export default function BlogEditor() {
+
+export default function BlogEditor({ blogId }: { blogId: string }) {
+  console.log(blogId, "coming from blog editor page");
   const router = useRouter();
 
   return (
@@ -20,7 +22,7 @@ export default function BlogEditor() {
       </header>
 
       {/* Main Content Form*/}
-      <BlogForm />
+      <BlogForm blogId={blogId} />
     </div>
   );
 }

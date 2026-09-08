@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
+import { API_URL } from "@/utlis/apiCall";
 
 type BackendRegisterResponse = {
   success?: boolean;
@@ -13,6 +12,8 @@ type BackendRegisterResponse = {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log(body, "coming from register page ==========");
+
     const backendResponse = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -25,6 +26,8 @@ export async function POST(request: NextRequest) {
         address: body.address,
       }),
     });
+
+    console.log(backendResponse, "==========backendResponse");
 
     const data: BackendRegisterResponse = await backendResponse
       .json()
@@ -52,23 +55,19 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
+    
+    console.log(response, "geting response form resgister side ===============");
+
     response.cookies.set("authToken", data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
     return response;
   } catch (error) {
-    const invalidBody = error instanceof SyntaxError;
-    return NextResponse.json(
-      {
-        error: invalidBody
-          ? "Invalid request body"
-          : "Authentication service is unavailable",
-      },
-      { status: invalidBody ? 400 : 503 },
-    );
+    console.log(error, "comming form register side ");
+    return NextResponse.json(error);
   }
 }

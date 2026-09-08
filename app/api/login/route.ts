@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
+import { API_URL } from "@/utlis/apiCall";
 
 // Handle POST requests for user sign-in
 export async function POST(request: NextRequest) {
@@ -15,8 +14,18 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
+    console.log(backendResponse, "backendResponse login side");
+
     const contentType = backendResponse.headers.get("content-type") || "";
-    let data: { token?: string; user?: unknown; message?: string; error?: string } = {};
+    console.log(contentType, "contentType getting contentType");
+    let data: {
+      token?: string;
+      user?: unknown;
+      message?: string;
+      error?: string;
+    } = {};
+
+    console.log(data, "----------login data");
 
     if (contentType.includes("application/json")) {
       data = await backendResponse.json().catch(() => ({}));
@@ -26,8 +35,12 @@ export async function POST(request: NextRequest) {
     }
 
     if (!backendResponse.ok) {
-      const errorMessage = data.error || data.message || "Enter the correct email & password";
-      return NextResponse.json({ error: errorMessage }, { status: backendResponse.status });
+      const errorMessage =
+        data.error || data.message || "Enter the correct email & password";
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: backendResponse.status },
+      );
     }
 
     if (!data.token) {
@@ -45,6 +58,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 },
     );
+    console.log(response, "----------login response");
     response.cookies.set("authToken", data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

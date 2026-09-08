@@ -35,11 +35,6 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard",
-    "/login",
-    "/signup",
-    "/blog",
-    "/blog/:id/edit",
-    "/blog/create",
+    
   ],
 };

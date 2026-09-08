@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../Input";
 import { toast } from "react-toastify";
+import LoaderButton from "../LoaderButton";
 // import LoaderButton from "../LoaderButton";
 
 const LoginForm = () => {
@@ -20,6 +21,8 @@ const LoginForm = () => {
     password: "",
   });
 
+  const emailRejex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((pre) => ({
@@ -31,18 +34,20 @@ const LoginForm = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors: Record<string, string> = {};
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
+    } else if (!emailRejex.test(formData.email)) {
+      newErrors.email = "Email is not valid";
     }
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     } else if (formData.password.trim().length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
+      newErrors.password = "Password should be more then 6 characters long";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -58,7 +63,6 @@ const LoginForm = () => {
       ).unwrap();
       toast.success(result.message);
       router.replace("/dashboard");
-      router.refresh();
     } catch (error) {
       toast.error(typeof error === "string" ? error : "Unable to sign in");
     }
@@ -101,9 +105,9 @@ const LoginForm = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600"
+                className="cursor-pointer flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-400"
               >
-                {loading ? "...loading" : "Signin"}
+                {loading ? <LoaderButton textval="Loading..." /> : "Signin"}
               </button>
             </div>
           </form>
@@ -112,9 +116,9 @@ const LoginForm = () => {
             Not a member?
             <Link
               href="/signup"
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
+              className="font-semibold text-blue-600 hover:text-indigo-300 ms-2"
             >
-              signup
+              Signup
             </Link>
           </p>
         </div>
