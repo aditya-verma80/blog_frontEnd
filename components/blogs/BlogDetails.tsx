@@ -89,8 +89,6 @@ export default function BlogDetails({ blogId }: { blogId: string }) {
         </div>
       </article>
     </main>
-      </article>
-    </main>
+
   );
-}
 }

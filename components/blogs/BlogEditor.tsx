@@ -23,7 +23,6 @@ export default function BlogEditor({ blogId }: { blogId: string }) {
 
       {/* Main Content Form*/}
       <BlogForm blogId={blogId} />
-      <BlogForm blogId={blogId} />
     </div>
   );
 }

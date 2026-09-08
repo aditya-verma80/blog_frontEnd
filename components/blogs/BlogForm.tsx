@@ -54,9 +54,6 @@ function QuillEditor({
       quill.root.setAttribute("aria-label", "Blog content");
       quill.root.setAttribute("aria-required", "true");
 
-      quill.root.setAttribute("aria-label", "Blog content");
-      quill.root.setAttribute("aria-required", "true");
-
       quill.root.innerHTML = value;
       quill.on("text-change", () => {
         onChangeRef.current(quill.root.innerHTML);
@@ -174,17 +171,6 @@ const BlogForm = ({ blogId }: { blogId: string }) => {
     } catch (error) {
       toast.error(typeof error === "string" ? error : "Unable to save blog");
     }
-    try {
-      const result = blogId
-        ? await dispatch(updateBlog({ id: blogId, data: formData })).unwrap()
-        : await dispatch(createBlog(formData)).unwrap();
-
-      toast.success(result.message);
-      router.push(`/blog/${result.blog._id}`);
-      router.refresh();
-    } catch (error) {
-      toast.error(typeof error === "string" ? error : "Unable to save blog");
-    }
   };
 
   return (
@@ -196,7 +182,6 @@ const BlogForm = ({ blogId }: { blogId: string }) => {
         <div className="rounded-lg bg-white p-4 shadow-md sm:p-8">
           <h1 className="mb-6 text-2xl font-bold text-gray-800 sm:text-3xl">
             {blogId ? "Edit Blog" : "Create New Blog"}
-          </h1>
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -216,8 +201,6 @@ const BlogForm = ({ blogId }: { blogId: string }) => {
                 placeholder="Enter your blog title"
                 className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base border border-gray-300 outline-none text-gray-800 outline-1 -outline-offset-1 placeholder:text-gray-500  sm:text-sm/6`}
                 aria-label="Blog title"
-                aria-invalid={Boolean(errors.title)}
-                aria-describedby={errors.title ? "title-error" : undefined}
                 aria-invalid={Boolean(errors.title)}
                 aria-describedby={errors.title ? "title-error" : undefined}
               />

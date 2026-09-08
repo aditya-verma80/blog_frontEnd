@@ -75,7 +75,6 @@ function Dashboard() {
 
   return (
     <section className="min-h-screen bg-gray-50 text-gray-900">
-    <section className="min-h-screen bg-gray-50 text-gray-900">
       <Navbar />
       <main id="main-content" className="container mx-auto px-4 py-8 sm:py-10">
         <div className="mb-8 flex flex-col items-start gap-4 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
