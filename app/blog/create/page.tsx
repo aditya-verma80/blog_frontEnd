@@ -4,6 +4,7 @@ import React from "react";
 const CreateBlog = () => {
   return (
     <div>
+      <h1>Add Blog</h1>
       <BlogEditor />
     </div>
   );

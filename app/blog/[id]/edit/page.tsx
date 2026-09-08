@@ -1,23 +1,18 @@
-import React from "react";
+import BlogEditor from "@/components/blogs/BlogEditor";
 
-const API_URL = process.env.API_BASE_URL || "http://localhost:5000/api";
-
-export default async function EditBlogPage({
+const EditBlogPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
+}) => {
   const { id } = await params;
+  // const { blogs } = useSelector((state: RootState) => state.blog);
   return (
     <>
       <div className="">
         <p>edit id no is {id}</p>
-
-        
-
-
-
       </div>
+      <BlogEditor blogId={id} />
     </>
   );
 };
