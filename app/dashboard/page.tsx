@@ -1,5 +1,6 @@
 "use client";
 
+
 import ConfirmationModal from "@/components/ConfirmationModal";
 import Navbar from "@/components/Navbar";
 import { deleteBlog, fetchBlogs } from "@/redux/slices/blogSlice";
@@ -73,6 +74,7 @@ function Dashboard() {
 
 
   return (
+    <section className="min-h-screen bg-gray-50 text-gray-900">
     <section className="min-h-screen bg-gray-50 text-gray-900">
       <Navbar />
       <main id="main-content" className="container mx-auto px-4 py-8 sm:py-10">

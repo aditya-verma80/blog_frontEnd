@@ -69,8 +69,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900">
+    <main id="main-content" className="flex min-h-screen flex-col justify-center bg-gray-900 px-4 py-10 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
             Sign in to your account
@@ -81,7 +80,7 @@ const LoginForm = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               label="Email"
-              type="text"
+              type="email"
               value={formData.email}
               onChange={handleChange}
               name="email"
@@ -113,7 +112,7 @@ const LoginForm = () => {
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Not a member?
+            Not a member?{" "}
             <Link
               href="/signup"
               className="font-semibold text-blue-600 hover:text-indigo-300 ms-2"
@@ -122,8 +121,7 @@ const LoginForm = () => {
             </Link>
           </p>
         </div>
-      </div>
-    </div>
+    </main>
   );
 };
 

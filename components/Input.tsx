@@ -18,6 +18,7 @@ export default function Input({
   onChange,
   type = "text",
 }: InputProps) {
+  const errorId = `${name}-error`;
   return (
     <div className="w-full mb-4">
       <label
@@ -39,9 +40,11 @@ export default function Input({
               : "outline-white/10 focus:outline-indigo-500"
           }`}
         placeholder={placeholder}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
       />
       {error && (
-        <p className="mt-1 text-sm text-red-500" role="alert">
+        <p id={errorId} className="mt-1 text-sm font-medium text-red-300" role="alert">
           {error}
         </p>
       )}

@@ -117,8 +117,8 @@ const RegisterForm = () => {
   };
 
   return (
-    <section className="max-w-full">
-      <div className=" flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-10 bg-gray-900 ">
+    <main id="main-content" className="min-h-screen max-w-full bg-gray-900">
+      <div className="mx-auto flex flex-col items-center justify-center px-4 py-8 sm:px-6 lg:py-10">
         <div className="w-full rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 border">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-white md:text-2xl dark:text-white">
@@ -149,6 +149,7 @@ const RegisterForm = () => {
 
               <Input
                 label="Age"
+                label="Age"
                 type="number"
                 value={formData.age}
                 onChange={handleChange}
@@ -160,6 +161,7 @@ const RegisterForm = () => {
 
               <Input
                 label="Address"
+                label="Address"
                 type="text"
                 value={formData.address}
                 onChange={handleChange}
@@ -170,6 +172,7 @@ const RegisterForm = () => {
               />
 
               <Input
+                label="Password"
                 label="Password"
                 type="password"
                 value={formData.password}
@@ -194,7 +197,7 @@ const RegisterForm = () => {
               <button
                 type="submit"
                 disabled={loading === true}
-                className="w-full text-white bg-blue-800 hover:bg-primary-700 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 cursor-pointer disabled:bg-gray-600 disabled:text-gray-100 disabled:cursor-not-allowed"
+                className="min-h-11 w-full cursor-pointer rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-100"
               >
                 {loading ? "Submitting..." : "Sign up"}
               </button>
@@ -204,14 +207,14 @@ const RegisterForm = () => {
                   href="/login"
                   className="font-bold ms-2 text-blue-600 hover:underline dark:text-primary-500"
                 >
-                  Signin
+                  Sign in
                 </Link>
               </p>
             </form>
           </div>
         </div>
       </div>
-    </section>
+    </main>
   );
 };
 

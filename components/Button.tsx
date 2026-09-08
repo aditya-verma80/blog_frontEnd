@@ -14,7 +14,8 @@ const Button = ({ buttonName, bgColor, clickRouter }: colorType) => {
       <button
         //  onClick={() => router.push(`/blog/${blog.id}`)}
         onClick={() => router.push(`/blog/${clickRouter}`)}
-        className={`px-4 py-2  ${bgColor} text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400`}
+        type="button"
+        className={`min-h-11 px-4 py-2 ${bgColor} rounded-lg font-bold text-white transition hover:-translate-y-1`}
       >
         {buttonName}
       </button>
