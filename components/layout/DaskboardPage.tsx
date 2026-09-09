@@ -68,8 +68,8 @@ const DaskboardPage = () => {
               <p className="mb-6 line-clamp-4 grow text-gray-700">
                 {blog.content.replace(/<[^>]*>/g, " ")}
               </p>
-              <p className="text-sm text-gray-700">
-                By {blog.author?.username || blog.authorName}
+              <p className="text-sm text-gray-700 capitalize">
+                By <span className="font-semibold text-blue-900">{blog.author?.username || blog.authorName}</span>
               </p>
               <p className="mb-5 text-xs text-gray-500">
                 {new Date(blog.createdAt).toLocaleDateString()}
