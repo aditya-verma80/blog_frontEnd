@@ -182,38 +182,52 @@ describe('blog async thunks', () => {
   });
 
   it('fetchBlogs resolves with blogs list when API succeeds', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    const mockResponse: Response = {
       ok: true,
       json: async () => ({
         data: [blogOne, blogTwo],
         message: 'Blogs fetched successfully',
       }),
-    }) as any;
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(mockResponse);
 
     const result = await fetchBlogs()(jest.fn(), () => ({}), undefined);
 
     expect(result.type).toBe(fetchBlogs.fulfilled.type);
-    expect(result.payload?.blogs).toHaveLength(2);
-    expect(result.payload?.message).toBe('Blogs fetched successfully');
+    if (result.type !== fetchBlogs.fulfilled.type) {
+      throw new Error('Expected fetchBlogs fulfilled action');
+    }
+
+    const payload = result.payload;
+    expect(payload.blogs).toHaveLength(2);
+    expect(payload.message).toBe('Blogs fetched successfully');
   });
 
   it('fetchBlogById rejects when API responds with an error', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    const mockResponse: Response = {
       ok: false,
       json: async () => ({ message: 'Blog not found' }),
-    }) as any;
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(mockResponse);
 
     const result = await fetchBlogById('missing')(jest.fn(), () => ({}), undefined);
 
     expect(result.type).toBe(fetchBlogById.rejected.type);
-    expect(result.payload).toBe('Blog not found');
+    if (result.type !== fetchBlogById.rejected.type) {
+      throw new Error('Expected fetchBlogById rejected action');
+    }
+    expect(result.payload ?? '').toBe('Blog not found');
   });
 
   it('createBlog rejects when request fails', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    const mockResponse: Response = {
       ok: false,
       json: async () => ({ message: 'Failed to create blog' }),
-    }) as any;
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(mockResponse);
 
     const result = await createBlog({ title: 'Test', content: 'Body' })(
       jest.fn(),
@@ -222,6 +236,9 @@ describe('blog async thunks', () => {
     );
 
     expect(result.type).toBe(createBlog.rejected.type);
-    expect(result.payload).toBe('Failed to create blog');
+    if (result.type !== createBlog.rejected.type) {
+      throw new Error('Expected createBlog rejected action');
+    }
+    expect(result.payload ?? '').toBe('Failed to create blog');
   });
 });

@@ -52,6 +52,19 @@ describe('RegisterForm component', () => {
     expect(screen.getAllByText(/password is required/i)).toHaveLength(2);
   });
 
+  it('toggles password visibility for both password fields', () => {
+    render(<RegisterForm />);
+
+    const passwordInputs = screen.getAllByLabelText(/^Password$/i);
+    expect(passwordInputs[0]).toHaveAttribute('type', 'password');
+
+    const toggleButtons = screen.getAllByRole('button', { name: /show password/i });
+    fireEvent.click(toggleButtons[0]);
+
+    expect(screen.getByLabelText(/^Password$/i)).toHaveAttribute('type', 'text');
+    expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
+  });
+
   it('submits valid data and redirects to dashboard', async () => {
     render(<RegisterForm />);
 

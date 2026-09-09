@@ -102,7 +102,7 @@ describe('auth async thunks', () => {
   });
 
   it('registerUser resolves with user data when API succeeds', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    const mockResponse: Response = {
       ok: true,
       json: async () => ({
         user: {
@@ -115,7 +115,9 @@ describe('auth async thunks', () => {
         },
         message: 'Account created successfully',
       }),
-    }) as any;
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(mockResponse);
 
     const result = await registerUser({
       username: 'demo',
@@ -127,18 +129,23 @@ describe('auth async thunks', () => {
     })(jest.fn(), () => ({}), undefined);
 
     expect(result.type).toBe(registerUser.fulfilled.type);
+    if (result.type !== registerUser.fulfilled.type) {
+      throw new Error('Expected registerUser fulfilled action');
+    }
     expect(result.payload.user.username).toBe('demo');
   });
 
   it('registerUser rejects when API returns an error', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    const mockResponse: Response = {
       ok: false,
       json: async () => ({ message: 'Registration failed' }),
-    }) as any;
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(mockResponse);
 
     const result = await registerUser({
-      username: 'demo',
-      email: 'demo@example.com',
+      username: 'testuser',
+      email: 'testuser@gmail.com',
       password: '123456',
       confirmPassword: '123456',
       age: 24,
@@ -146,6 +153,9 @@ describe('auth async thunks', () => {
     })(jest.fn(), () => ({}), undefined);
 
     expect(result.type).toBe(registerUser.rejected.type);
-    expect(result.payload).toBe('Registration failed');
+    if (result.type !== registerUser.rejected.type) {
+      throw new Error('Expected registerUser rejected action');
+    }
+    expect(result.payload ?? '').toBe('Registration failed');
   });
 });

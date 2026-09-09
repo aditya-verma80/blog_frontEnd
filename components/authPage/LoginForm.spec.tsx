@@ -38,6 +38,20 @@ describe('LoginForm', () => {
     expect(screen.getByText('Password is required')).toBeInTheDocument();
   });
 
+  it('toggles password visibility', () => {
+    render(<LoginForm />);
+
+    const passwordInput = screen.getByLabelText('Password');
+    const toggleButton = screen.getByRole('button', { name: /show password/i });
+
+    expect(passwordInput).toHaveAttribute('type', 'password');
+
+    fireEvent.click(toggleButton);
+
+    expect(screen.getByLabelText('Password')).toHaveAttribute('type', 'text');
+    expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
+  });
+
   it('submits valid credentials and redirects to dashboard', async () => {
     mockDispatch.mockReturnValue({
       unwrap: async () => ({ message: 'Login successful' }),
