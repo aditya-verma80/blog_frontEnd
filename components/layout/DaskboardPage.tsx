@@ -86,7 +86,9 @@ const DaskboardPage = () => {
                 >
                   Read More
                 </Link>
-                {(user?.id === blog.author?._id || user?.role === "admin") && (
+                {((Boolean(user?.id && blog.author?._id) &&
+                  user?.id === blog.author?._id) ||
+                  user?.role === "admin") && (
                   <Link
                     href={`/blog/${blog._id}/edit`}
                     className="inline-flex min-h-11 items-center rounded bg-amber-700 px-3 py-2 text-sm text-white"
@@ -94,7 +96,9 @@ const DaskboardPage = () => {
                     Edit
                   </Link>
                 )}
-                {(user?.id === blog.author?._id || user?.role === "admin") && (
+                {((Boolean(user?.id && blog.author?._id) &&
+                  user?.id === blog.author?._id) ||
+                  user?.role === "admin") && (
                   <button
                     type="button"
                     onClick={() => setDeleteTarget({ id: blog._id, title: blog.title })}

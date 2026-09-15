@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 const mockDispatch = jest.fn();
 const mockReplace = jest.fn();
+let mockAuthState = { loading: false };
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -14,7 +15,7 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
-  useSelector: () => ({ loading: false }),
+  useSelector: () => mockAuthState,
 }));
 
 jest.mock('react-toastify', () => ({
@@ -27,6 +28,7 @@ jest.mock('react-toastify', () => ({
 describe('RegisterForm component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAuthState = { loading: false };
     mockDispatch.mockReturnValue({ unwrap: jest.fn().mockResolvedValue({ message: 'Registered successfully' }) });
   });
 
@@ -65,6 +67,46 @@ describe('RegisterForm component', () => {
     expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
   });
 
+  it('shows validation for invalid values', async () => {
+    render(<RegisterForm />);
+
+    fireEvent.change(screen.getByLabelText(/^User Name$/i), { target: { name: 'username', value: 'J' } });
+    fireEvent.change(screen.getByLabelText(/^Email$/i), { target: { name: 'email', value: 'bad-email' } });
+    fireEvent.change(screen.getByLabelText(/^Age$/i), { target: { name: 'age', value: '-1' } });
+    fireEvent.change(screen.getByLabelText(/^Address$/i), { target: { name: 'address', value: 'Delhi' } });
+    fireEvent.change(screen.getByLabelText(/^Password$/i), { target: { name: 'password', value: '123' } });
+    fireEvent.change(screen.getByLabelText(/^Confirm Password$/i), { target: { name: 'confirmPassword', value: '456' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+
+    expect(await screen.findByText(/username must be at least 2 characters long/i)).toBeInTheDocument();
+    expect(screen.getByText(/email is not valid/i)).toBeInTheDocument();
+    expect(screen.getByText(/password must be at least 6 characters long/i)).toBeInTheDocument();
+    expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
+    expect(screen.getByText(/age must be a positive number/i)).toBeInTheDocument();
+  });
+
+  it('clears validation errors when fields change', async () => {
+    render(<RegisterForm />);
+
+    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+    expect(await screen.findByText(/username is required/i)).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/^User Name$/i), {
+      target: { name: 'username', value: 'Jane' },
+    });
+
+    expect(screen.queryByText(/username is required/i)).not.toBeInTheDocument();
+  });
+
+  it('renders loading submit text', () => {
+    mockAuthState = { loading: true };
+
+    render(<RegisterForm />);
+
+    expect(screen.getByRole('button', { name: /submitting/i })).toBeDisabled();
+  });
+
   it('submits valid data and redirects to dashboard', async () => {
     render(<RegisterForm />);
 
@@ -100,6 +142,24 @@ describe('RegisterForm component', () => {
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Unable to create your account');
+    });
+  });
+
+  it('shows string registration errors directly', async () => {
+    mockDispatch.mockReturnValue({ unwrap: jest.fn().mockRejectedValue('Email exists') });
+    render(<RegisterForm />);
+
+    fireEvent.change(screen.getByLabelText(/^User Name$/i), { target: { name: 'username', value: 'Jane' } });
+    fireEvent.change(screen.getByLabelText(/^Email$/i), { target: { name: 'email', value: 'jane@example.com' } });
+    fireEvent.change(screen.getByLabelText(/^Age$/i), { target: { name: 'age', value: '25' } });
+    fireEvent.change(screen.getByLabelText(/^Address$/i), { target: { name: 'address', value: 'Mumbai' } });
+    fireEvent.change(screen.getByLabelText(/^Password$/i), { target: { name: 'password', value: 'abcdef' } });
+    fireEvent.change(screen.getByLabelText(/^Confirm Password$/i), { target: { name: 'confirmPassword', value: 'abcdef' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Email exists');
     });
   });
 });
